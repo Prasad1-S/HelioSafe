@@ -1,6 +1,7 @@
 import express from 'express';
 import query from './config/db.js'
 import generateToken from './lib/auth.js'
+import authenticate from './middleware/auth.js'
 const app = express();
 
 app.use(express.json());
@@ -48,5 +49,10 @@ app.post("/login",async(req,res)=>{
   }
 
 });
+
+
+app.get("/secret", authenticate, (req,res)=>{
+  res.json(req.user);
+})
 
 export default app;
