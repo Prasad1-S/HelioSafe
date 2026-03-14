@@ -4,3 +4,7 @@ This project is a personalized UV-protection platform that helps users understan
 >## Project Status
 > This project is currently in the **ideation and development phase**.
 > The architecture and features are continuously being improved.
+
+- [x] ~~JWT based authentication~~ (plan scrached)
+- [x] Password-less authentication using resend.
+- [x] setting up a resend sender for local developement.
