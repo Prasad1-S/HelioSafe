@@ -1,7 +1,7 @@
 import express from 'express';
 import query from './config/db.js';
 import generateToken from './lib/auth.js';
-import verifyToken from './lib/auth.js';
+import {verifyToken} from './lib/auth.js';
 import SendAuthLink from './lib/email.js';
 const app = express();
 
@@ -25,7 +25,7 @@ app.post("/login", async(req,res)=>{
     if(result.rowCount===0) return res.status(404).json({Error:"No User Found!"});
     
     const user = {
-      uid: result.rows[0].id,
+      id: result.rows[0].id,
       email: result.rows[0].email
     }
 
@@ -46,10 +46,11 @@ app.get("/auth/verify/:token",(req,res)=>{
   
   try {
     const decoded = verifyToken(token);
+    const sessionToken = generateToken({id: decoded.id,email: decoded.email},"7d");
+
     return res.status(200).json({
-      message:"Login Successful!",
-      user:decoded,
-      token
+      message:"Successful login!",
+      sessionToken: sessionToken
     });
   } catch (err) {
     return res.status(401).json({Error:"Invalid or Expired token!"});
