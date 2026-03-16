@@ -3,9 +3,12 @@ import query from './config/db.js';
 import generateToken from './lib/auth.js';
 import {verifyToken} from './lib/auth.js';
 import SendAuthLink from './lib/email.js';
+import cookieParser from 'cookie-parser';
+
 const app = express();
 
 app.use(express.json());
+app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 
 app.get("/", (req, res) => {
@@ -46,11 +49,18 @@ app.get("/auth/verify/:token",(req,res)=>{
   
   try {
     const decoded = verifyToken(token);
-    const sessionToken = generateToken({id: decoded.id,email: decoded.email},"7d");
+    const sessionToken = generateToken({id: decoded.id,email: decoded.email},"365d");
+
+    res.cookie("session", sessionToken,{
+      httpOnly:true,
+      secure:true,
+      sameSite:"strict",
+      maxAge: 365*24*60*60*1000
+    })
 
     return res.status(200).json({
       message:"Successful login!",
-      sessionToken: sessionToken
+      user:decoded
     });
   } catch (err) {
     return res.status(401).json({Error:"Invalid or Expired token!"});

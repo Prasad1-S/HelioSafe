@@ -1,17 +1,13 @@
-import jwt from 'jsonwebtoken';
+import { verifyToken } from '../lib/auth';
 
 export default function authenticate(req, res, next){
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
+    const token = req.cookies.session;
+    if(!token) return res.status(401).json({Error:"Not Logged in!"});
 
-    if(!token){
-        return res.status(401).json({error:"No auth token provided"});
-    }
-    jwt.verify(token,process.env.JWT_SECRET, (err,user)=>{
-        if(err){
-            return res.status(403).json({error:"Invalid or expired auth token"});
-        }
-        req.user = user;
+    try {
+        req.user = verifyToken(token);
         next();
-    });
+    } catch (err) {
+        res.json(401).json({Error:"Session Expired, Please login again!"});
+    }
 }
