@@ -10,5 +10,5 @@ This project is a personalized UV-protection platform that helps users understan
 - [x] setting up a resend sender for local developement.
 - [x] Add authentication middleware for sessiontoken.
 - [x] add sample protected route.
-- [] add /register route.
-- [] explore the APIs for connection.
+- [ ] add /register route.
+- [ ] explore the APIs for connection.
