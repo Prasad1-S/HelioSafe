@@ -4,6 +4,7 @@ import generateToken from './lib/auth.js';
 import {verifyToken} from './lib/auth.js';
 import SendAuthLink from './lib/email.js';
 import cookieParser from 'cookie-parser';
+import authenticate from './middleware/auth.js';
 
 const app = express();
 
@@ -67,5 +68,8 @@ app.get("/auth/verify/:token",(req,res)=>{
   }
 });
 
+app.get("/secret",authenticate , (req,res)=>{
+  res.send("Authenticated!");
+});
 
 export default app;

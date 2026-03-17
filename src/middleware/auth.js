@@ -1,4 +1,4 @@
-import { verifyToken } from '../lib/auth';
+import { verifyToken } from '../lib/auth.js';
 
 export default function authenticate(req, res, next){
     const token = req.cookies.session;
