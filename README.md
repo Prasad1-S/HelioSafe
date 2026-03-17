@@ -8,7 +8,7 @@ This project is a personalized UV-protection platform that helps users understan
 - [x] ~~JWT based authentication~~ (plan scrached)
 - [x] Password-less authentication using resend.
 - [x] setting up a resend sender for local developement.
-- [] Add authentication middleware for sessiontoken.
-- [] add sample protected route.
+- [x] Add authentication middleware for sessiontoken.
+- [x] add sample protected route.
 - [] add /register route.
 - [] explore the APIs for connection.
