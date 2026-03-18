@@ -45,6 +45,11 @@ app.post("/login", async(req,res)=>{
   }
 });
 
+app.post("/register",(req,res)=>{
+  const {email} = req.body;
+  
+});
+
 app.get("/auth/verify/:token",(req,res)=>{
   const {token} = req.params;
   
