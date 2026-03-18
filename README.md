@@ -10,5 +10,7 @@ This project is a personalized UV-protection platform that helps users understan
 - [x] setting up a resend sender for local developement.
 - [x] Add authentication middleware for sessiontoken.
 - [x] add sample protected route.
-- [ ] add /register route.
-- [ ] explore the APIs for connection.
+- [x] explore the APIs for uv index.
+- [ ] explore the APIs for cloud & other parameters.
+- [ ] explore the docs of [open meteo](https://open-meteo.com/en/docs).
+- [ ] complete the magic link flow.
