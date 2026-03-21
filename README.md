@@ -11,6 +11,10 @@ This project is a personalized UV-protection platform that helps users understan
 - [x] Add authentication middleware for sessiontoken.
 - [x] add sample protected route.
 - [x] explore the APIs for uv index.
-- [ ] explore the APIs for cloud & other parameters.
-- [ ] explore the docs of [open meteo](https://open-meteo.com/en/docs).
-- [ ] complete the magic link flow.
+- [x] explore the APIs for cloud & other parameters.
+- [x] explore the docs of [open meteo](https://open-meteo.com/en/docs).
+- [x] complete the magic link flow.
+- [x] add rate limiting to the critical endpoint.
+- [ ] add magic link token expiry logic.
+- [ ] add validation for email in the /register endpoint.
+- [ ] add a type field in the token generation to distinguish between session token and magic-link token.
