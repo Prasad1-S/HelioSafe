@@ -4,6 +4,8 @@ import generateToken from './lib/auth.js';
 import {verifyToken} from './lib/auth.js';
 import SendAuthLink from './lib/email.js';
 import cookieParser from 'cookie-parser';
+import { loginLimiter } from './middleware/rateLimit.js';
+import { verifyLimiter } from './middleware/rateLimit.js';
 import authenticate from './middleware/auth.js';
 
 const app = express();
@@ -16,7 +18,7 @@ app.get("/", (req, res) => {
   res.send("Server working");
 });
 
-app.post("/login", async(req,res)=>{
+app.post("/login",loginLimiter,  async(req,res)=>{
   const {email} = req.body;
   if(!email) return res.status(400).json({Error:"No Email Provided!"});
 
@@ -45,12 +47,22 @@ app.post("/login", async(req,res)=>{
   }
 });
 
-app.post("/register",(req,res)=>{
+app.post("/register",async(req,res)=>{
   const {email} = req.body;
-  
+  try {
+    const result = await query(
+      "INSERT INTO users(email) VALUES ($1)",
+      [email]
+    );
+    return res.status(200).json({Success:"User Created Successfully!"});
+    
+  } catch (err) {
+    console.log(`Sign-up Error: ${err}`);
+    res.status(500).json({Error:"Internal Server Error!"});
+  }
 });
 
-app.get("/auth/verify/:token",(req,res)=>{
+app.get("/auth/verify/:token",verifyLimiter, async(req,res)=>{
   const {token} = req.params;
   
   try {
