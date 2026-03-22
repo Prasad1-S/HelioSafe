@@ -20,4 +20,6 @@ This project is a personalized UV-protection platform that helps users understan
 - [ ] add magic link token expiry logic.
 - [ ] add a type field in the token generation to distinguish between session token and magic-link token.
 - [ ] add email verification logic before calling the sendEmail function.
+- [ ] add type field to generate into token.
+
 
