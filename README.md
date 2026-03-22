@@ -19,3 +19,5 @@ This project is a personalized UV-protection platform that helps users understan
 - [x] merge the register & login route into a single /auth route (Now it became actual magic link).
 - [ ] add magic link token expiry logic.
 - [ ] add a type field in the token generation to distinguish between session token and magic-link token.
+- [ ] add email verification logic before calling the sendEmail function.
+
