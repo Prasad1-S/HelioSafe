@@ -18,47 +18,33 @@ app.get("/", (req, res) => {
   res.send("Server working");
 });
 
-app.post("/login",loginLimiter,  async(req,res)=>{
-  const {email} = req.body;
-  if(!email) return res.status(400).json({Error:"No Email Provided!"});
+app.post("/auth", loginLimiter, async (req, res) => {
+  const { email } = req.body;
+  if (!email) return res.status(400).json({ Error: "No email provided!" });
 
   try {
-    const result = await query(
-      "SELECT * FROM users WHERE email=$1",
-      [email]
-    );
-
-    if(result.rowCount===0) return res.status(404).json({Error:"No User Found!"});
     
-    const user = {
-      id: result.rows[0].id,
-      email: result.rows[0].email
+    let result = await query("SELECT * FROM users WHERE email=$1", [email]);    
+    if (result.rowCount === 0) {
+      result = await query(
+        "INSERT INTO users(email) VALUES ($1) RETURNING *",
+        [email]
+      );
     }
 
-    const token = generateToken(user);
-    const sendEmail = await SendAuthLink(email, token);
-
-    if (sendEmail) return res.status(200).json({ Success: "Magic Link sent to the email!" });
-    else return res.status(200).json({ Error: "Failed to send the email!" });
-
-  } catch (err) {
-    console.log(`Login Error:${err}`);
-    return res.status(500).json({Error:"Failed to Login!"});
-  }
-});
-
-app.post("/register",async(req,res)=>{
-  const {email} = req.body;
-  try {
-    const result = await query(
-      "INSERT INTO users(email) VALUES ($1)",
-      [email]
-    );
-    return res.status(200).json({Success:"User Created Successfully!"});
+    const user = {
+      id: result.rows[0].id,
+      email: result.rows[0].email,
+    };
     
+    const token = generateToken(user, "15m");  
+    const sent = await SendAuthLink(email, token);
+    if (!sent) return res.status(500).json({ Error: "Failed to send magic link!" });
+    return res.status(200).json({ Success: "Magic link sent!" });
+
   } catch (err) {
-    console.log(`Sign-up Error: ${err}`);
-    res.status(500).json({Error:"Internal Server Error!"});
+    console.error(`Auth Error: ${err}`);
+    return res.status(500).json({ Error: "Internal server error!" });
   }
 });
 
