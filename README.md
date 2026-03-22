@@ -14,7 +14,8 @@ This project is a personalized UV-protection platform that helps users understan
 - [x] explore the APIs for cloud & other parameters.
 - [x] explore the docs of [open meteo](https://open-meteo.com/en/docs).
 - [x] complete the magic link flow.
-- [x] add rate limiting to the critical endpoint.
+- [x] add rate limiting to the /auth endpoint.
+- [x] ~~add validation for email in the /register endpoint.~~
+- [x] merge the register & login route into a single /auth route (Now it became actual magic link).
 - [ ] add magic link token expiry logic.
-- [ ] add validation for email in the /register endpoint.
 - [ ] add a type field in the token generation to distinguish between session token and magic-link token.
