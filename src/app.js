@@ -53,6 +53,16 @@ app.get("/auth/verify/:token",verifyLimiter, async(req,res)=>{
   
   try {
     const decoded = verifyToken(token);
+    const used = await query(
+      "SELECT 1 FROM used_tokens WHERE token=$1",
+      [token]
+    );
+    if(used.rowCount>0) return res.status(401).json({Error:"Link Already Used!"});
+
+    await query(
+      "INSERT INTO used_tokens(token) VALUES($1)",[token]
+    );
+    
     const sessionToken = generateToken({id: decoded.id,email: decoded.email},"365d");
 
     res.cookie("session", sessionToken,{
