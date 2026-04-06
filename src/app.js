@@ -37,7 +37,7 @@ app.post("/auth", loginLimiter, async (req, res) => {
       email: result.rows[0].email,
     };
     
-    const token = generateToken(user, "15m");  
+    const token = generateToken(user, "magic_link" ,"15m");  
     const sent = await SendAuthLink(email, token);
     if (!sent) return res.status(500).json({ Error: "Failed to send magic link!" });
     return res.status(200).json({ Success: "Magic link sent!" });
@@ -63,7 +63,7 @@ app.get("/auth/verify/:token",verifyLimiter, async(req,res)=>{
       "INSERT INTO used_tokens(token) VALUES($1)",[token]
     );
     
-    const sessionToken = generateToken({id: decoded.id,email: decoded.email},"365d");
+    const sessionToken = generateToken({id: decoded.id,email: decoded.email}, "session", "365d");
 
     res.cookie("session", sessionToken,{
       httpOnly:true,

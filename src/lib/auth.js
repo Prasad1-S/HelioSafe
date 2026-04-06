@@ -1,8 +1,8 @@
 import jwt from "jsonwebtoken";
 
-export default function generateToken(user, expiresIn = "15m"){
+export default function generateToken(user, type, expiresIn = "15m"){
     return jwt.sign(
-        {id: user.id, email: user.email},
+        {id: user.id, email: user.email, type: type},
         process.env.JWT_SECRET,
         { expiresIn }
     )
