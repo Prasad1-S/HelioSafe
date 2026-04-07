@@ -20,8 +20,7 @@ This project is a personalized UV-protection platform that helps users understan
 - [x] add magic link token expiry logic.
 - [ ] add a cron job to delete the expired tokens in the used_tokens table in the DB (priority: low).
 - [x] add a type field in the token generation to distinguish between session token and magic-link token.
-- [ ] add email verification logic before calling the sendEmail function.
-- [ ] add rate limiting to the /auth endpoint.
+- [x] add email verification logic before calling the sendEmail function.
 
 
 
