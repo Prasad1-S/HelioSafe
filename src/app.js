@@ -2,7 +2,7 @@ import express from 'express';
 import query from './config/db.js';
 import generateToken from './lib/auth.js';
 import {verifyToken} from './lib/auth.js';
-import SendAuthLink from './lib/email.js';
+import SendAuthLink from './service/email.js';
 import cookieParser from 'cookie-parser';
 import { loginLimiter } from './middleware/rateLimit.js';
 import { verifyLimiter } from './middleware/rateLimit.js';
@@ -57,6 +57,7 @@ app.get("/auth/verify/:token",verifyLimiter, async(req,res)=>{
       "SELECT 1 FROM used_tokens WHERE token=$1",
       [token]
     );
+    
     if(used.rowCount>0) return res.status(401).json({Error:"Link Already Used!"});
 
     await query(

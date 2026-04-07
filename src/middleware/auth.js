@@ -5,7 +5,6 @@ export default function authenticate(req, res, next){
     if(!token) return res.status(401).json({Error:"Not Logged in!"});
 
     req.user = verifyToken(token);
-    console.log(req.user);
     if(req.user.type!="session") return res.status(401).json({Error:"Invalid or Expired Token!"})
     try {
         req.user = verifyToken(token);
