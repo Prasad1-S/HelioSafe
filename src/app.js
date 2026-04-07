@@ -3,6 +3,7 @@ import query from './config/db.js';
 import generateToken from './lib/auth.js';
 import {verifyToken} from './lib/auth.js';
 import SendAuthLink from './service/email.js';
+import canSend from './lib/verifyEmail.js'
 import cookieParser from 'cookie-parser';
 import { loginLimiter } from './middleware/rateLimit.js';
 import { verifyLimiter } from './middleware/rateLimit.js';
@@ -21,6 +22,7 @@ app.get("/", (req, res) => {
 app.post("/auth", loginLimiter, async (req, res) => {
   const { email } = req.body;
   if (!email) return res.status(400).json({ Error: "No email provided!" });
+  if(!canSend(email)) return res.status(400).json({Error: "Invalid Email!"});
 
   try {
     
