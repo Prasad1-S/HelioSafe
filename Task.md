@@ -11,7 +11,9 @@
 - [x] ~~add validation for email in the /register endpoint.~~
 - [x] merge the register & login route into a single /auth route (Now it became actual magic link).
 - [x] add magic link token expiry logic.
-- [ ] add a cron job to delete the expired tokens in the used_tokens table in the DB (priority: low).
 - [x] add a type field in the token generation to distinguish between session token and magic-link token.
 - [x] add email verification logic before calling the sendEmail function.
 
+
+- [ ] add a cron job to delete the expired tokens in the used_tokens table in the DB (priority: low).
+- [ ] refactor the routing logic using controllers and routers as middleware.
