@@ -4,23 +4,5 @@ This project is a personalized UV-protection platform that helps users understan
 >## Project Status
 > This project is currently in the **ideation and development phase**.
 > The architecture and features are continuously being improved.
-
-- [x] ~~JWT based authentication~~ (plan scrached)
-- [x] Password-less authentication using resend.
-- [x] setting up a resend sender for local developement.
-- [x] Add authentication middleware for sessiontoken.
-- [x] add sample protected route.
-- [x] explore the APIs for uv index.
-- [x] explore the APIs for cloud & other parameters.
-- [x] explore the docs of [open meteo](https://open-meteo.com/en/docs).
-- [x] complete the magic link flow.
-- [x] add rate limiting to the /auth endpoint.
-- [x] ~~add validation for email in the /register endpoint.~~
-- [x] merge the register & login route into a single /auth route (Now it became actual magic link).
-- [x] add magic link token expiry logic.
-- [ ] add a cron job to delete the expired tokens in the used_tokens table in the DB (priority: low).
-- [x] add a type field in the token generation to distinguish between session token and magic-link token.
-- [x] add email verification logic before calling the sendEmail function.
-
-
+> You can see the ongoing/completed plan/ tasks in the task.md.
 
