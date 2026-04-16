@@ -8,6 +8,7 @@ import cookieParser from 'cookie-parser';
 import { loginLimiter } from './middleware/rateLimit.js';
 import { verifyLimiter } from './middleware/rateLimit.js';
 import authenticate from './middleware/auth.js';
+import getWeatherData from './service/uv.js';
 
 const app = express();
 
@@ -88,4 +89,15 @@ app.get("/secret",authenticate , (req,res)=>{
   res.send("Authenticated!");
 });
 
+app.get("/uv", async(req,res)=>{
+  const lat = req.query.lat;
+  const lon = req.query.lon;
+  try {
+    const data = await getWeatherData(lat,lon);
+    res.status(200).json({Data:data});
+  } catch (err) {
+    console.log("error happening");
+  }
+  
+});
 export default app;

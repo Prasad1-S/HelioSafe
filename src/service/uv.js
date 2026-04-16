@@ -1,65 +1,54 @@
 import { fetchWeatherApi } from 'openmeteo';
 
-const params = {
-    latitude: [52.54],
-    longitude: [13.41],
-    current: 'temperature_2m,weather_code,wind_speed_10m,wind_direction_10m',
-    hourly: 'temperature_2m,precipitation',
-    daily: 'weather_code,temperature_2m_max,temperature_2m_min'
-};
 const url = 'https://api.open-meteo.com/v1/forecast';
-const responses = await fetchWeatherApi(url, params);
 
-// Helper function to form time ranges
-const range = (start, stop, step) =>
- Array.from({ length: (stop - start) / step }, (_, i) => start + i * step);
+export default async function getWeatherData(lattitude, longitude) {
+  try {
+    /
+    const params = {
+        latitude: [lattitude],
+        longitude: [longitude],
+        hourly: [
+            'uv_index',
+            'uv_index_clear_sky',
+            'cloud_cover',
+            'cloud_cover_low',
+            'cloud_cover_mid',
+            'cloud_cover_high'
+        ],
+        forecast_days: 1
+    };
 
-// Process first location. Add a for-loop for multiple locations or weather models
-const response = responses[0];
+    const responses = await fetchWeatherApi(url, params);
+    
+    const response = responses[0];
+    const utcOffsetSeconds = response.utcOffsetSeconds();
+    const hourly = response.hourly();
 
-// Attributes for timezone and location
-const utcOffsetSeconds = response.utcOffsetSeconds();
-const timezone = response.timezone();
-const timezoneAbbreviation = response.timezoneAbbreviation();
-const latitude = response.latitude();
-const longitude = response.longitude();
+    const range = (start, stop, step) =>
+      Array.from({ length: (stop - start) / step }, (_, i) => start + i * step);
 
-const current = response.current();
-const hourly = response.hourly();
-const daily = response.daily();
+    const weatherData = {
+      hourly: {
+        time: range(Number(hourly.time()), Number(hourly.timeEnd()), hourly.interval())
+                .map((t) => new Date((t + utcOffsetSeconds) * 1000)),
+        uvIndex:         hourly.variables(0).valuesArray(),
+        uvIndexClearSky: hourly.variables(1).valuesArray(),
+        cloudCover:      hourly.variables(2).valuesArray(),
+      }
+    };
 
-// Note: The order of weather variables in the URL query and the indices below need to match!
-const weatherData = {
-    current: {
-        time: new Date((Number(current.time()) + utcOffsetSeconds) * 1000),
-        temperature: current.variables(0).value(), // Current is only 1 value, therefore `.value()`
-        weatherCode: current.variables(1).value(),
-        windSpeed: current.variables(2).value(),
-        windDirection: current.variables(3).value()
-    },
-    hourly: {
-        time: range(Number(hourly.time()), Number(hourly.timeEnd()), hourly.interval()).map(
-            (t) => new Date((t + utcOffsetSeconds) * 1000)
-        ),
-        temperature: hourly.variables(0).valuesArray(), // `.valuesArray()` get an array of floats
-        precipitation: hourly.variables(1).valuesArray(),
-    },
-    daily: {
-        time: range(Number(daily.time()), Number(daily.timeEnd()), daily.interval()).map(
-            (t) => new Date((t + utcOffsetSeconds) * 1000)
-        ),
-        weatherCode: daily.variables(0).valuesArray(),
-        temperatureMax: daily.variables(1).valuesArray(),
-        temperatureMin: daily.variables(2).valuesArray(),
+    for (let i = 0; i < weatherData.hourly.time.length; i++) {
+      const hour = weatherData.hourly.time[i].toLocaleTimeString([], { hour: '2-digit' });
+      const uv = weatherData.hourly.uvIndex[i].toFixed(1);
+      const cloud = weatherData.hourly.cloudCover[i].toFixed(0);
+
+      console.log(`Time: ${hour} | UV Index: ${uv} | Cloud Cover: ${cloud}%`);
+      return(`Time: ${hour} | UV Index: ${uv} | Cloud Cover: ${cloud}%`);
     }
-};
-
-// `weatherData` now contains a simple structure with arrays for datetime and weather data
-for (let i = 0; i < weatherData.daily.time.length; i++) {
-  console.log(
-    weatherData.daily.time[i].toISOString(), 
-    weatherData.daily.weatherCode[i], 
-    weatherData.daily.temperatureMax[i], 
-    weatherData.daily.temperatureMin[i]
-  );
+  } catch (e) {
+    console.error("Fetch failed. Check if 'openmeteo-sdk' is installed or the URL is correct.");
+    console.error("Error details:", e);
+    throw e; 
+  }
 }
